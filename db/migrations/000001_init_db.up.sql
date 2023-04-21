@@ -47,13 +47,8 @@ create table development.project_operators
     constraint project_operators_pkey primary key (project_id, operator_id)
 );
 
-create index on development.projects (id);
-create index on development.operators (id);
-
 create unique index uq_country_code_phone_number_operators
     on development.operators (country_code_number, phone_number);
-
-create index on development.project_operators (project_id, operator_id);
 
 create unique index uq_project_operators_ids
     on development.project_operators (project_id, operator_id);
