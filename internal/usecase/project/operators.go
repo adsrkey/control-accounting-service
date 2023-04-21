@@ -7,11 +7,7 @@ import (
 	"github.com/uptrace/bun/driver/pgdriver"
 )
 
-func (uc *UseCase) AssignProjectOperator(dto []dto.ProjectOperator) error {
-	// TODO ctx нужно нормально продумать повсеместно (timeout 300 ms)
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
+func (uc *UseCase) AssignProjectOperator(ctx context.Context, dto []dto.ProjectOperator) error {
 	err := uc.repo.AssignProjectOperator(ctx, dto)
 	if err != nil {
 		constraint := "\"project_operators_pkey\""
@@ -20,9 +16,9 @@ func (uc *UseCase) AssignProjectOperator(dto []dto.ProjectOperator) error {
 		if errors.As(err, &e) {
 			message := e.Field('M')
 			if message == duplicateKey+constraint {
-				return errors.New("projects operator with this uuid exist")
+				return errors.New("project operator with this uuid exist")
 			}
-			return errors.New("projects operator exist")
+			return errors.New("project operator exist")
 		}
 	}
 

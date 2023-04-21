@@ -1,10 +1,11 @@
 package types
 
 import (
-	"control-accounting-service/internal/domain/projects"
-	"control-accounting-service/internal/repository/storage/postgres/dao"
+	"control-accounting-service/internal/domain/project"
+	dao "control-accounting-service/internal/repository/storage/postgres/dao/project"
 	"control-accounting-service/internal/usecase/dto"
 	"errors"
+	"fmt"
 	"github.com/google/uuid"
 	"strconv"
 	"time"
@@ -41,11 +42,39 @@ const (
 )
 
 type ReqGetAll struct {
-	//Offset int `uri:"offset" binding:"int"`
-	//Limit  int `uri:"count" binding:"int"`
-
 	Offset string `uri:"offset"`
 	Limit  string `uri:"limit"`
+}
+
+type ReqProjectOperator struct {
+	ID          string   `json:"id" `
+	OperatorIds []string `json:"operator_ids" `
+}
+
+func (reqAPO *ReqProjectOperator) ToDTO() ([]dto.ProjectOperator, error) {
+	if len(reqAPO.OperatorIds) == 0 {
+		return nil, errors.New("add operator_ids value")
+	}
+	projectID, err := uuid.Parse(reqAPO.ID)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	result := make([]dto.ProjectOperator, 0, len(reqAPO.OperatorIds))
+
+	for _, v := range reqAPO.OperatorIds {
+		operatorID, err := uuid.Parse(v)
+		if err != nil {
+			return nil, err
+		}
+		fmt.Println(operatorID)
+		result = append(result, dto.ProjectOperator{
+			ProjectID:  projectID,
+			OperatorID: operatorID,
+		})
+	}
+
+	return result, nil
 }
 
 func (rga ReqGetAll) ToDTO() (dto.GetProjects, error) {
@@ -66,10 +95,10 @@ func (rga ReqGetAll) ToDTO() (dto.GetProjects, error) {
 }
 
 type GetAllProjectsResponse struct {
-	Count    int                         `json:"count"`
-	Limit    int                         `json:"limit,omitempty"`
-	Offset   int                         `json:"offset,omitempty"`
-	Projects []projects.ProjectOperators `json:"projects"`
+	Count    int                        `json:"count"`
+	Limit    int                        `json:"limit,omitempty"`
+	Offset   int                        `json:"offset,omitempty"`
+	Projects []project.ProjectOperators `json:"project"`
 }
 
 type UpdateProject struct {
@@ -95,7 +124,6 @@ func (uo *UpdateProject) ToDAO() (*dao.Project, error) {
 		CreatedAt:   uo.CreatedAt,
 		ModifiedAt:  uo.ModifiedAt,
 		ProjectName: uo.ProjectName,
-		//TODO тут осторожнее, может быть 0 как default, нужно проверить!
 		ProjectType: uo.ProjectType,
 	}, nil
 }

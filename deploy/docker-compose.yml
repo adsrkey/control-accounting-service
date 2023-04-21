@@ -17,3 +17,22 @@ services:
       POSTGRES_DB: test
     volumes:
       - ./db-data/postgresql/:/var/lib/postgresql/data/
+
+  control-accounting-service:
+    container_name: control-accounting-service
+    image: 'golang:1.20.1'
+    build:
+      context: ../.
+      dockerfile: control-accounting-service.dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      PORT: 8080
+      DSN: "postgres://postgres:postgres@postgres:5432/test?sslmode=disable"
+    depends_on:
+      postgres:
+        condition: service_started

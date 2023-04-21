@@ -1,14 +1,38 @@
-package dao
+package project
 
 import (
 	"control-accounting-service/internal/domain/operator"
-	domain "control-accounting-service/internal/domain/projects"
+	domain "control-accounting-service/internal/domain/project"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"time"
 )
 
-type ProjectOp struct {
+type Project struct {
+	bun.BaseModel `bun:"table:development.project,alias:op"`
+
+	Id          uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
+	CreatedAt   time.Time
+	ModifiedAt  time.Time
+	ProjectName string
+	ProjectType string
+}
+
+func (p *Project) ToDomain() *domain.Project {
+	return &domain.Project{
+		ProjectName: p.ProjectName,
+		ProjectType: p.ProjectType,
+	}
+}
+
+type AssignProjectOperator struct {
+	bun.BaseModel `bun:"table:development.project_operators,alias:pr_op" `
+
+	ProjectID  uuid.UUID `json:"project_id,omitempty"`
+	OperatorID uuid.UUID `json:"operator_id,omitempty"`
+}
+
+type ProjectOperator struct {
 	bun.BaseModel `bun:"table:development.projects,alias:pr"`
 
 	ID          uuid.UUID `bun:",pk"`
@@ -16,26 +40,25 @@ type ProjectOp struct {
 	ModifiedAt  time.Time
 	ProjectName string
 	ProjectType string
-	// Order and Item in join:Order=Item are fields in OrderToItem model
-	Operators []OperatorPr `bun:"m2m:development.project_operators,join:Project=Operator"`
+	Operators   []Operator `bun:"m2m:development.project_operators,join:Project=Operator"`
 }
 
-func (p ProjectOp) TODomain() domain.ProjectOperators {
+func (p ProjectOperator) TODomain() domain.ProjectOperators {
 	domainOperators := make([]operator.Operator, 0, len(p.Operators))
 	for _, v := range p.Operators {
 		domainOperators = append(domainOperators, v.ToDomain())
 	}
 	return domain.ProjectOperators{
 		ID:          p.ID,
+		CreatedAt:   p.CreatedAt,
+		ModifiedAt:  p.ModifiedAt,
 		ProjectName: p.ProjectName,
 		ProjectType: p.ProjectType,
 		Operators:   domainOperators,
 	}
 }
 
-// item - operator
-
-type OperatorPr struct {
+type Operator struct {
 	bun.BaseModel `bun:"table:development.operators,alias:op"`
 
 	ID                uuid.UUID `bun:",pk"`
@@ -48,11 +71,9 @@ type OperatorPr struct {
 	CountryCodeNumber string    `json:"country_code_number"`
 	PhoneNumber       string    `json:"phone_number"`
 	Email             string    `json:"email"`
-	// Order and Item in join:Order=Item are fields in OrderToItem model
-	//Project []Project `bun:"m2m:development.project_operators,join:Operator=Project"`
 }
 
-func (o OperatorPr) ToDomain() operator.Operator {
+func (o Operator) ToDomain() operator.Operator {
 	return operator.Operator{
 		Id:          o.ID,
 		CreatedAt:   o.CreatedAt,
@@ -69,8 +90,8 @@ func (o OperatorPr) ToDomain() operator.Operator {
 type ProjectOperators struct {
 	bun.BaseModel `bun:"table:development.project_operators,alias:pr_op"`
 
-	ProjectID  uuid.UUID   `bun:",pk"`
-	Project    *ProjectOp  `bun:"rel:belongs-to,join:project_id=id"`
-	OperatorID uuid.UUID   `bun:",pk"`
-	Operator   *OperatorPr `bun:"rel:belongs-to,join:operator_id=id"`
+	ProjectID  uuid.UUID        `bun:",pk"`
+	Project    *ProjectOperator `bun:"rel:belongs-to,join:project_id=id"`
+	OperatorID uuid.UUID        `bun:",pk"`
+	Operator   *Operator        `bun:"rel:belongs-to,join:operator_id=id"`
 }

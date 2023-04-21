@@ -3,20 +3,16 @@ package project
 import (
 	"context"
 	"control-accounting-service/internal/delivery/http/projects/types"
-	domain "control-accounting-service/internal/domain/projects"
+	domain "control-accounting-service/internal/domain/project"
 	"control-accounting-service/internal/usecase/dto"
 	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun/driver/pgdriver"
-	"time"
 )
 
-func (uc *UseCase) CreateProject(dto *dto.Project) (uuid.UUID, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Millisecond)
-	defer cancel()
-
+func (uc *UseCase) CreateProject(ctx context.Context, dto *dto.Project) (uuid.UUID, error) {
 	dao := dto.ToDAO()
 
 	operatorID, err := uc.repo.CreateProject(ctx, dao)
@@ -48,16 +44,16 @@ func (uc *UseCase) GetProject(ctx context.Context, projectID uuid.UUID) (project
 	return projects, nil
 }
 
-func (uc *UseCase) GetProjects(dto dto.GetProjects) (projects []domain.ProjectOperators, err error) {
-	projects, err = uc.repo.GetAllProjects(context.Background(), dto)
+func (uc *UseCase) GetProjects(ctx context.Context, dto dto.GetProjects) (projects []domain.ProjectOperators, err error) {
+	projects, err = uc.repo.GetAllProjects(ctx, dto)
 	if err != nil {
 		return nil, err
 	}
 	return projects, nil
 }
 
-func (uc *UseCase) UpdateProject(dto *types.UpdateProject) error {
-	err := uc.repo.UpdateProject(context.Background(), dto)
+func (uc *UseCase) UpdateProject(ctx context.Context, dto *types.UpdateProject) error {
+	err := uc.repo.UpdateProject(ctx, dto)
 	if err != nil {
 		fmt.Println(err)
 		projectNameConstraint := "\"project_name_key\""
@@ -75,10 +71,7 @@ func (uc *UseCase) UpdateProject(dto *types.UpdateProject) error {
 	return nil
 }
 
-func (uc *UseCase) Delete(projectID uuid.UUID) error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
+func (uc *UseCase) Delete(ctx context.Context, projectID uuid.UUID) error {
 	err := uc.repo.DeleteProject(ctx, projectID)
 	if err != nil {
 		return err
@@ -87,10 +80,7 @@ func (uc *UseCase) Delete(projectID uuid.UUID) error {
 	return nil
 }
 
-func (uc *UseCase) DeleteOperators(dto []dto.ProjectOperator) error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
+func (uc *UseCase) DeleteOperators(ctx context.Context, dto []dto.ProjectOperator) error {
 	err := uc.repo.DeleteProjectOperators(ctx, dto)
 	if err != nil {
 		return err

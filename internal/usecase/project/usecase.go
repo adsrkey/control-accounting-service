@@ -3,8 +3,8 @@ package project
 import (
 	"context"
 	"control-accounting-service/internal/delivery/http/projects/types"
-	domain "control-accounting-service/internal/domain/projects"
-	"control-accounting-service/internal/repository/storage/postgres/dao"
+	domain "control-accounting-service/internal/domain/project"
+	dao "control-accounting-service/internal/repository/storage/postgres/dao/project"
 	"control-accounting-service/internal/usecase/dto"
 	"github.com/google/uuid"
 )
