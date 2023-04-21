@@ -35,6 +35,10 @@ make down
 <br>
 
 #### POST:
+Description:
+
+- Create new operator
+
 ```
 http://localhost:8080/api/v1/operators
 ```
@@ -61,6 +65,10 @@ Response:
 ```
 ---
 #### GET
+Description:
+
+- Get operator by uuid
+
 ```
 http://localhost:8080/api/v1/operators/d96ab496-58ea-40f8-ab33-41383a809dc0
 ```
@@ -81,6 +89,10 @@ Response:
 ---
 
 #### GET
+Description:
+
+- Get all operators with offset and limit
+
 ```
 http://localhost:8080/api/v1/operators
 ``` 
@@ -126,6 +138,11 @@ Response:
 ---
 
 #### PUT
+
+Description:
+
+- Update operator by uuid
+
 ```
 http://localhost:8080/api/v1/operators
 ```
@@ -146,6 +163,10 @@ Body raw (json)
 ---
 #### DELETE
 
+Description:
+
+- Delete operator by uuid
+
 ```
 http://localhost:8080/api/v1/operators/ea4a3096-bb06-4a43-9fbc-6bdeb95e182a
 ```
@@ -156,6 +177,10 @@ http://localhost:8080/api/v1/operators/ea4a3096-bb06-4a43-9fbc-6bdeb95e182a
 
 ---
 #### POST
+
+Description:
+
+- Create new project
 
 ```
 http://localhost:8080/api/v1/projects
@@ -179,6 +204,10 @@ Response:
 
 ---
 #### GET
+
+Description:
+
+- Get project by uuid (with project operators)
 
 ```
 http://localhost:8080/api/v1/projects/e0a1c218-1aa4-4261-bb03-dacd1d106c40
@@ -210,6 +239,11 @@ Response:
 
 ---
 #### GET
+
+Description:
+
+- Get all projects with offset and limit
+
 ```
 http://localhost:8080/api/v1/projects
 ``` 
@@ -252,6 +286,11 @@ Response:
 ```
 ---
 #### PUT
+
+Description:
+
+- Update project by uuid
+
 ```http://localhost:8080/api/v1/projects```
 
 #### Request Headers:
@@ -273,6 +312,10 @@ Response:
 ---
 #### DELETE
 
+Description:
+
+- Delete project by uuid
+
 ```
 http://localhost:8080/api/v1/projects/e0a1c218-1aa4-4261-bb03-dacd1d106c40
 ```
@@ -284,6 +327,10 @@ Response:
 
 ---
 #### DELETE
+
+Description:
+
+- Get projects operators by uuids
 
 ```
 http://localhost:8080/api/v1/projects/operator
@@ -311,6 +358,11 @@ Response:
 
 ---
 #### POST
+
+Description:
+
+- Assign operators to project by project uuid
+
 ```
 http://localhost:8080/api/v1/projects/operator
 ```
