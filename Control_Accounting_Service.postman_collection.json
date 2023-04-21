@@ -1,0 +1,353 @@
+{
+	"info": {
+		"_postman_id": "c034c997-7e65-4a8e-9157-8c25ee63bf94",
+		"name": "NextContact",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17949940",
+		"_collection_link": "https://lionslight.postman.co/workspace/My-Workspace~9deeb9c6-e772-43e3-82f8-6888b5c48006/collection/17949940-c034c997-7e65-4a8e-9157-8c25ee63bf94?action=share&creator=17949940&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "CREATE OPERATORS",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"first_name\":\"Daniel\",\r\n    \"last_name\":\"Holopov\",\r\n    \"middle_name\":\"Poncho\",\r\n    \"city\":\"Moscow\",\r\n    \"phone_number\":\"+7-(906)-906-00-00\",\r\n    \"email\":\"email@temp.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/operators",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"operators"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET OPERATOR",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/operators/d96ab496-58ea-40f8-ab33-41383a809dc0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"operators",
+						"d96ab496-58ea-40f8-ab33-41383a809dc0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET OPERATORS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/operators",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"operators"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "19",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "20",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CHANGE OPERATOR",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"ea4a3096-bb06-4a43-9fbc-6bdeb95e182a\",\r\n    \"first_name\": \"Pavel\", \r\n    \"city\": \"St. Petersburg\", \r\n    \"phone_number\": \"79349009090\",\r\n    \"email\": \"emailex@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/operators",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"operators"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE OPERATOR",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/operators/ea4a3096-bb06-4a43-9fbc-6bdeb95e182a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"operators",
+						"ea4a3096-bb06-4a43-9fbc-6bdeb95e182a"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE PROJECTS",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"project_name\": \"project\",\r\n    \"project_type\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/projects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET PROJECT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/projects/e0a1c218-1aa4-4261-bb03-dacd1d106c40",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"projects",
+						"e0a1c218-1aa4-4261-bb03-dacd1d106c40"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET PROJECTS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/projects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"projects"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "offset",
+							"value": "8",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CHANGE PROJECTS",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"e0a1c218-1aa4-4261-bb03-dacd1d106c40\",\r\n    \"project_name\":\"Pool\",\r\n    \"project_type\":\"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/projects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE PROJECT",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/projects/e0a1c218-1aa4-4261-bb03-dacd1d106c40",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"projects",
+						"e0a1c218-1aa4-4261-bb03-dacd1d106c40"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE PROJECT OPERATOR",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"29525e05-6507-4820-80c7-b0a56bc7f5e2\",\r\n    \"operator_ids\":[\r\n        \"167ed880-3a5c-4949-bad8-ad2634ab7ab9\",\r\n        \"bef0c626-1af5-4f78-8821-a4877c73a2b0\",\r\n        \"319e4715-0c9e-4c99-9fb4-a79ba58bf133\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/projects/operator",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"projects",
+						"operator"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CREATE PROJECT OPERATOR",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"29525e05-6507-4820-80c7-b0a56bc7f5e2\",\r\n    \"operator_ids\":[\r\n        \"167ed880-3a5c-4949-bad8-ad2634ab7ab9\",\r\n        \"bef0c626-1af5-4f78-8821-a4877c73a2b0\",\r\n        \"319e4715-0c9e-4c99-9fb4-a79ba58bf133\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/projects/operator",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"projects",
+						"operator"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
