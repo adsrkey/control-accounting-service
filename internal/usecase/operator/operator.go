@@ -74,6 +74,8 @@ func (uc *UseCase) UpdateOperator(ctx context.Context, dto *dto.UpdateOperator) 
 		operatorsEmailConstraint := "\"operators_email_key\""
 		duplicateKey := "duplicate key value violates unique constraint "
 		countryCodePhoneNumberOperatorsConstraint := "\"uq_country_code_phone_number_operators\""
+
+		newRowMessage := "new row for relation \"operators\" violates check constraint \"phone_number_chk\""
 		var e pgdriver.Error
 		if errors.As(err, &e) {
 			message := e.Field('M')
@@ -82,6 +84,9 @@ func (uc *UseCase) UpdateOperator(ctx context.Context, dto *dto.UpdateOperator) 
 			}
 			if message == duplicateKey+countryCodePhoneNumberOperatorsConstraint {
 				return errors.New("operator with this phone number exist")
+			}
+			if message == newRowMessage {
+				return errors.New("phone number incorrect, please change or try with \"country_code_number\" and \"phone_number\"")
 			}
 			return errors.New("operator with this data exist")
 		}

@@ -80,7 +80,6 @@ func (r *Repository) UpdateOperator(ctx context.Context, operator *dto.UpdateOpe
 
 	_, err = r.db.NewUpdate().Where("id = ?", operatorDAO.Id).Model(operatorDAO).Column(columns...).Exec(ctx)
 	if err != nil {
-		fmt.Println("ERR", err)
 		return err
 	}
 	return nil
