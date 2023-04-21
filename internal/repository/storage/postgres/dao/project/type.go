@@ -9,7 +9,7 @@ import (
 )
 
 type Project struct {
-	bun.BaseModel `bun:"table:development.project,alias:op"`
+	bun.BaseModel `bun:"table:development.projects,alias:op"`
 
 	Id          uuid.UUID `bun:",pk,type:uuid,default:uuid_generate_v4()"`
 	CreatedAt   time.Time
