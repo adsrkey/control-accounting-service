@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"control-accounting-service/internal/repository/storage/postgres/dao"
+	dao "control-accounting-service/internal/repository/storage/postgres/dao/project"
 	"github.com/google/uuid"
 )
 

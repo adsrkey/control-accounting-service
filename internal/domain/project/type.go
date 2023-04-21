@@ -1,4 +1,4 @@
-package projects
+package project
 
 import (
 	"control-accounting-service/internal/domain/operator"
@@ -10,12 +10,6 @@ type Project struct {
 	ProjectName string `json:"project_name,omitempty"`
 	ProjectType string `json:"project_type,omitempty"`
 }
-
-const (
-	In = iota
-	Out
-	AutoInform
-)
 
 type ProjectOperators struct {
 	ID          uuid.UUID           `json:"id"`

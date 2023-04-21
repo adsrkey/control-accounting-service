@@ -1,13 +1,10 @@
 package http
 
 import (
-	"control-accounting-service/internal/delivery/http/config"
-	"errors"
+	"control-accounting-service/internal/config"
+	"fmt"
 )
 
 func (de *Delivery) Start(config *config.Config) error {
-	if config.IsEmpty() {
-		return errors.New("config is empty")
-	}
-	return de.engine.Run()
+	return de.engine.Run(fmt.Sprintf("0.0.0.0:%d", config.Port))
 }

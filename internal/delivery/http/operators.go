@@ -1,136 +1,147 @@
 package http
 
 import (
-	"control-accounting-service/internal/delivery/http/operators/types"
-	types2 "control-accounting-service/internal/delivery/types"
-	domain "control-accounting-service/internal/domain/operator"
+	"context"
+	operators "control-accounting-service/internal/delivery/http/operators/types"
+	reqs "control-accounting-service/internal/delivery/http/types"
 	"control-accounting-service/internal/usecase/dto"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
-func (de *Delivery) CreateOperator(ctx *gin.Context) {
-	header := ctx.GetHeader("Content-Type")
-	if header == "" {
-		ctx.JSON(http.StatusUnsupportedMediaType, "Header Content-Type is required")
+func (de *Delivery) CreateOperator(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c, 400*time.Millisecond)
+	defer cancel()
+
+	if c.ContentType() != "application/json" {
+		c.JSON(http.StatusUnsupportedMediaType, "Header Content-Type is required to be \"application/json\"")
 		return
 	}
 
-	var req *types.CreateRequest
-	err := ctx.Bind(&req)
+	var req *operators.CreateRequest
+	err := c.Bind(&req)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, "bad request")
+		c.JSON(http.StatusBadRequest, "bad request")
 		return
 	}
 
 	err = req.Valid()
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
-	resp, err := de.operatorUc.CreateOperator(req.ToDTO())
+	resp, err := de.operatorUc.CreateOperator(ctx, req.ToDTO())
 	if err != nil {
-		ctx.JSON(http.StatusConflict, err.Error())
+		c.JSON(http.StatusConflict, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, resp)
 }
 
-func (de *Delivery) GetOperator(ctx *gin.Context) {
-	var req types2.ReqID
-	err := ctx.ShouldBindUri(&req)
+func (de *Delivery) GetOperator(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c, 400*time.Millisecond)
+	defer cancel()
+
+	var req reqs.ReqID
+	err := c.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(405, err.Error())
+		c.JSON(405, err.Error())
 		return
 	}
 
-	id, err := req.Valid()
+	operatorID, err := req.Valid()
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, "non valid uuid string")
+		c.JSON(http.StatusBadRequest, "non valid uuid string")
 		return
 	}
 
-	operator, err := de.operatorUc.GetOperator(id)
+	operatorDomain, err := de.operatorUc.GetOperator(ctx, operatorID)
 	if err != nil {
-		ctx.JSON(http.StatusGone, err.Error())
+		c.JSON(http.StatusGone, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, operator)
+	c.JSON(http.StatusOK, operatorDomain)
 }
 
-func (de *Delivery) GetAllOperators(ctx *gin.Context) {
-	req := types.ReqGetAll{}
-	req.Offset = ctx.DefaultQuery("offset", "0")
-	req.Limit = ctx.DefaultQuery("limit", "50")
+func (de *Delivery) GetAllOperators(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c, 400*time.Millisecond)
+	defer cancel()
 
-	dto, err := req.ToDTO()
+	req := operators.GetAllRequest{}
+	req.Offset = c.DefaultQuery("offset", "0")
+	req.Limit = c.DefaultQuery("limit", "50")
+
+	getAllRequestDTO, err := req.ToDTO()
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, "error")
+		c.JSON(http.StatusBadRequest, "error")
 		return
 	}
 
-	operators, err := de.operatorUc.GetOperators(dto)
+	operatorsDomain, err := de.operatorUc.GetOperators(ctx, getAllRequestDTO)
 	if err != nil {
-		ctx.JSON(http.StatusGone, err.Error())
+		c.JSON(http.StatusGone, err.Error())
 		return
 	}
 
-	ctx.JSON(http.StatusOK, GetAllOperatorsResponse{
-		Count:     len(operators),
-		Limit:     dto.Limit,
-		Offset:    dto.Offset,
-		Operators: operators,
+	c.JSON(http.StatusOK, operators.GetAllResponse{
+		Count:     len(operatorsDomain),
+		Limit:     getAllRequestDTO.Limit,
+		Offset:    getAllRequestDTO.Offset,
+		Operators: operatorsDomain,
 	})
 }
 
-type GetAllOperatorsResponse struct {
-	Count     int               `json:"count"`
-	Limit     int               `json:"limit,omitempty"`
-	Offset    int               `json:"offset,omitempty"`
-	Operators []domain.Operator `json:"operators"`
-}
+func (de *Delivery) UpdateOperator(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c, 400*time.Millisecond)
+	defer cancel()
 
-func (de *Delivery) UpdateOperator(ctx *gin.Context) {
-	header := ctx.GetHeader("Content-Type")
-	if header == "" {
-		ctx.JSON(http.StatusUnsupportedMediaType, "Header Content-Type is required")
+	if c.ContentType() != "application/json" {
+		c.JSON(http.StatusUnsupportedMediaType, "Header Content-Type is required to be \"application/json\"")
 		return
 	}
 
 	var req dto.UpdateOperator
-	err := ctx.Bind(&req)
+	err := c.Bind(&req)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, "please input body in right type format (string)")
+		c.JSON(http.StatusBadRequest, "please input body in right type format (string)")
 		return
 	}
 
-	err = de.operatorUc.UpdateOperator(&req)
+	err = de.operatorUc.UpdateOperator(ctx, &req)
 	if err != nil {
-		ctx.JSON(http.StatusConflict, err.Error())
+		c.JSON(http.StatusConflict, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, "ok")
+
+	c.JSON(http.StatusOK, "ok")
 }
 
-func (de *Delivery) DeleteOperator(ctx *gin.Context) {
-	var req types2.ReqID
-	err := ctx.ShouldBindUri(&req)
+func (de *Delivery) DeleteOperator(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(c, 400*time.Millisecond)
+	defer cancel()
+
+	var req reqs.ReqID
+	err := c.ShouldBindUri(&req)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
+
 	id, err := req.Valid()
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	err = de.operatorUc.Delete(id)
+
+	err = de.operatorUc.Delete(ctx, id)
 	if err != nil {
-		ctx.JSON(http.StatusConflict, err.Error())
+		c.JSON(http.StatusConflict, err.Error())
 		return
 	}
-	ctx.JSON(http.StatusOK, "deleted")
+
+	c.JSON(http.StatusOK, "deleted")
 }
